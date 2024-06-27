@@ -5,21 +5,14 @@ import { resolve } from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  server: {
-    host: "::",
-    port: "8080",
-  },
   plugins: [react()],
-  resolve: {
-    alias: [
-      {
-        find: "@",
-        replacement: fileURLToPath(new URL("./src", import.meta.url)),
-      },
-      {
-        find: "lib",
-        replacement: resolve(__dirname, "lib"),
-      },
-    ],
-  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '/public/api')
+      }
+    }
+  }
 });
